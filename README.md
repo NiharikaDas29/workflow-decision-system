@@ -65,35 +65,34 @@ The system follows a **modular architecture** where each component has a specifi
                           |
         +-----------------+------------------+
         |                                    |
-        v                                    v
-+---------------+                     +---------------+
-|  Rule Engine  |                     | Dependency    |
-|               |                     | Service       |
-| Evaluate      |                     | (Simulated)   |
-| Config Rules  |                     +---------------+
-+-------+-------+
+     +---------------+                     +---------------+
+     |  Rule Engine  |                     | Dependency    |
+     |               |                     | Service       |
+     | Evaluate      |                     | (Simulated)   |
+     | Config Rules  |                     +---------------+
+      +-------+-------+
         |
         v
-+---------------+
-|  Decision     |
-| Approve /     |
-| Reject /      |
-| Retry /       |
-| Manual Review |
-+-------+-------+
+    +---------------+
+    |  Decision     |
+    | Approve /     |
+    | Reject /      |
+    | Retry /       |
+    | Manual Review |
+    +-------+-------+
         |
         v
-+---------------+
-| State Manager |
-| Track Request |
-| Lifecycle     |
-+-------+-------+
+    +---------------+
+    | State Manager |
+    | Track Request |
+    | Lifecycle     |
+    +-------+-------+
         |
         v
-+---------------+
-|  Audit Logger |
-| Rule Traces   |
-+---------------+
+    +---------------+
+    |  Audit Logger |
+    | Rule Traces   |
+    +---------------+
 ---
 # System Workflow
 Client Request
@@ -117,10 +116,15 @@ Audit Logging
 workflow-decision-system/
 
 main.py # API entry point
+
 workflow_engine.py # Workflow orchestration logic
+
 rule_engine.py # Rule evaluation logic
+
 state_manager.py # Request state tracking
+
 audit.py # Audit logging
+
 dependency_service.py # External dependency simulation
 
 configs/
@@ -164,16 +168,18 @@ The system exposes a REST API using FastAPI.
 Endpoint
 POST /process
 Example Request
-{
+```json{
   "request_id": "123",
   "age": 25,
   "income": 40000
 }
+```
 Example Response
-{
+```json{
   "request_id": "123",
   "decision": "approved"
 }
+```
 
 **Decision Explanation (Auditability)**
 
@@ -183,8 +189,11 @@ Example:
 
 Input
 age = 25
+
 income = 20000
+
 Rules Triggered
+
 income_check → FAILED
 age_check → PASSED
 Final Decision
@@ -192,8 +201,11 @@ REJECT
 
 Audit logs include:
 -request ID
+
 -rule evaluated
+
 -rule result
+
 -decision outcome
 
 **Failure Handling**
@@ -212,11 +224,17 @@ This simulates real-world service failures and retry logic.
 **Testing Scenarios Covered**
 
 The system supports testing for:
+
 -Valid request (happy path)
+
 -Invalid input
+
 -Duplicate request handling
+
 -Dependency failure simulation
+
 -Retry workflow
+
 -Rule configuration changes
 
 **How to Run the Project**
@@ -224,43 +242,50 @@ Install dependencies:
 pip install fastapi uvicorn
 
 Run the server:
-uvicorn main:app --reload
 
-Open API documentation:
-http://127.0.0.1:8000/docs
+uvicorn main:app --reload
 
 **Example Workflow Execution**
 Request
-{
+```json{
   "request_id": "1",
   "age": 30,
   "income": 50000
 }
+```
 Output
-{
+```json{
   "request_id": "1",
   "decision": "approved"
 }
+```
 
 **Design Tradeoffs**
 For simplicity and demonstration purposes:
 
 -In-memory storage is used instead of a persistent database
--External dependency is simulated
--Rule evaluation supports basic conditional checks
+
+-External dependency is simulated-Rule evaluation supports basic conditional checks
 
 In production systems, these can be replaced with:
 
 -PostgreSQL or Redis for state storage
+
 -Distributed rule engines
+
 -Event-driven workflow orchestration
 
 **Scaling Considerations**
 For large-scale production systems:
+
 -Replace in-memory storage with Redis or PostgreSQL
+
 -Use Kafka or RabbitMQ for event-driven workflows
+
 -Deploy components as microservices
+
 -Implement horizontal scaling
+
 -Introduce a distributed rule engine
 
 **Conclusion**
