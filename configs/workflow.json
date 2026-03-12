@@ -1,0 +1,19 @@
+{
+  "workflow_name": "application_approval",
+  "rules": [
+    {
+      "name": "income_check",
+      "field": "income",
+      "operator": ">=",
+      "value": 30000,
+      "on_fail": "reject"
+    },
+    {
+      "name": "age_check",
+      "field": "age",
+      "operator": ">=",
+      "value": 18,
+      "on_fail": "manual_review"
+    }
+  ]
+}
